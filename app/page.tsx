@@ -1,6 +1,7 @@
 import { MainNav } from "@/components/main-nav";
 import HeroBanner from "@/components/landing/hero-banner";
 import FeaturedMovies from "@/components/landing/featured-movies";
+import Footer from "@/components/shared/footer";
 
 // RSC - React Server Component
 // SSR - Enabled by default
@@ -12,6 +13,7 @@ export default function HomePage() {
         <HeroBanner />
         <FeaturedMovies />
       </main>
+      <Footer />
     </div>
   );
 }

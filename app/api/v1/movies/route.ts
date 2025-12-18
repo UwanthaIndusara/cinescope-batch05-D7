@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/db";
 
 // GET /api/v1/movies
+// Public API Endpoint to fetch a list of movies
 export const GET = async () => {
   try {
     const movies = await db
