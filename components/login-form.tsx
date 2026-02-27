@@ -1,6 +1,7 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -16,6 +17,7 @@ import {
   FieldDescription,
   FieldGroup,
   FieldLabel,
+  FieldError,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { loginUser } from "@/actions/auth";
@@ -27,9 +29,21 @@ export function LoginForm({
   const [state, formAction, isPending] = useActionState(loginUser, {
     success: null,
     message: null,
+    field: null,
   });
+  const router = useRouter();
 
   console.log("Login state:", state, "isPending:", isPending);
+
+  useEffect(() => {
+    if (state) {
+      if (state.success) {
+        router.push("/dashboard");
+      } else {
+        // console.error("Login failed:", state.message);
+      }
+    }
+  }, [router, state]);
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -47,10 +61,14 @@ export function LoginForm({
                 <FieldLabel htmlFor="email">Email</FieldLabel>
                 <Input
                   id="email"
+                  name="email"
                   type="email"
                   placeholder="m@example.com"
-                  required
+                  // required
                 />
+                <FieldError className="text-xs">
+                  {state?.field === "email" ? state?.message : null}
+                </FieldError>
               </Field>
               <Field>
                 <div className="flex items-center">
@@ -62,11 +80,19 @@ export function LoginForm({
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" type="password" required />
+                <Input id="password" name="password" type="password" />
+                <FieldError className="text-xs">
+                  {state?.field === "password" ? state?.message : null}
+                </FieldError>
               </Field>
               <Field>
-                <Button type="submit">Login</Button>
-                <Button variant="outline" type="button">
+                <FieldError className="text-xs text-center">
+                  {state?.field === "general" ? state?.message : null}
+                </FieldError>
+                <Button type="submit" disabled={isPending}>
+                  Login
+                </Button>
+                <Button variant="outline" type="button" disabled={isPending}>
                   Login with Google
                 </Button>
                 <FieldDescription className="text-center">

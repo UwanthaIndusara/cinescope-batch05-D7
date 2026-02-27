@@ -6,7 +6,7 @@ export const auth = betterAuth({
   database: mongodbAdapter(db),
   emailAndPassword: {
     enabled: true,
-    autoSignIn: false,
+    autoSignIn: true,
   },
   session: {
     expiresIn: 60 * 60 * 24 * 7, // 7 days

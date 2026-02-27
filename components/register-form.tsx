@@ -1,6 +1,7 @@
 "use client";
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,21 +24,24 @@ export function RegisterForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const router = useRouter();
   const [state, formAction, isPending] = useActionState(registerUser, {
     success: null,
     message: null,
+    field: null,
   });
 
-  // const handleSignUp = async (formData: FormData) => {
-  // "use server";
-  // const name = formData.get("name") as string;
-  // const email = formData.get("email") as string;
-  // const password = formData.get("password") as string;
+  // console.log("Registration state:", state, "isPending:", isPending);
 
-  // Implement registration logic here
-  // };
-
-  console.log("Registration state:", state, "isPending:", isPending);
+  useEffect(() => {
+    if (state) {
+      if (state.success) {
+        router.push("/dashboard");
+      } else {
+        // console.error("Login failed:", state.message);
+      }
+    }
+  }, [router, state]);
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
